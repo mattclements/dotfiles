@@ -11,7 +11,6 @@ alias d="cd ~/Documents/Dropbox"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
 alias p="cd ~/Projects"
-alias g="git"
 alias h="history"
 alias j="jobs"
 alias v="vim"
@@ -123,3 +122,19 @@ done
 # Stuff I never really use but cannot delete either because of http://xkcd.com/530/
 alias stfu="osascript -e 'set volume output muted true'"
 alias pumpitup="osascript -e 'set volume 7'"
+
+# Git Shortcuts
+# Thanks to Geoffrey's peepcode for many of these
+alias g='git '
+alias gst='git status'
+alias gs='git status'
+alias gl='git pull'
+alias gp='git push'
+alias gd='git diff | mate'
+alias gdh='git diff HEAD | mate'
+alias gc='git commit -v'
+alias gca='git commit -v -a'
+alias gb='git branch'
+alias gba='git branch -a'
+alias gcap='git commit -v -a && git push'
+alias gpp='git pull; git push'
