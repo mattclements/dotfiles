@@ -55,7 +55,7 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
-# export LANG=en_GB.UTF-8
+export LANG=en_GB.UTF-8
 
 # Preferred editor for local and remote sessions
 # if [[ -n $SSH_CONNECTION ]]; then
@@ -63,6 +63,8 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # else
 #   export EDITOR='mvim'
 # fi
+
+source ~/.aliases
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -79,4 +81,5 @@ export PATH="/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-export PATH="~/bin:$PATH"
+export PATH="$(brew --prefix homebrew/php/php56)/bin:~/bin:$PATH"
+function gi() { curl -s https://www.gitignore.io/api/$@ ;}
