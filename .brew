@@ -1,4 +1,5 @@
 #!/bin/bash
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 # Make sure we’re using the latest Homebrew
 brew update
@@ -24,9 +25,11 @@ brew install narwhal
 
 # Install more recent versions of some OS X tools
 brew tap homebrew/dupes
+brew tap homebrew/versions
+brew tap homebrew/homebrew-php
+
 brew install homebrew/dupes/grep
-brew tap josegonzalez/homebrew-php
-brew install php54
+brew install php56
 
 # These two formulae didn’t work well last time I tried them:
 #brew install homebrew/dupes/vim
@@ -36,6 +39,7 @@ brew install php54
 brew install ack
 #brew install exiv2
 brew install git
+brew install svn
 #brew install imagemagick
 brew install lynx
 brew install node
