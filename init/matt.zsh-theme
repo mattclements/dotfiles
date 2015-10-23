@@ -26,7 +26,20 @@
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
 CURRENT_BG='NONE'
-SEGMENT_SEPARATOR='⮀'
+
+() {
+  local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+  # NOTE: This segment separator character is correct.  In 2012, Powerline changed
+  # the code points they use for their special characters. This is the new code point.
+  # If this is not working for you, you probably have an old version of the 
+  # Powerline-patched fonts installed. Download and install the new version.
+  # Do not submit PRs to change this unless you have reviewed the Powerline code point
+  # history and have new information.
+  # This is defined using a Unicode escape sequence so it is unambiguously readable, regardless of
+  # what font the user is viewing this source code in. Do not replace the
+  # escape sequence with a single literal character.
+  SEGMENT_SEPARATOR=$'\ue0b0' # 
+}
 
 ONLINE='%{%F{green}%}◉'
 OFFLINE='%{%F{red}%}⦿'
@@ -71,18 +84,46 @@ prompt_context() {
 }
 
 # Git: branch/detached head, dirty status
+# Git: branch/detached head, dirty status
 prompt_git() {
-  local ref dirty
+
+  local PL_BRANCH_CHAR
+  () {
+    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+    PL_BRANCH_CHAR=$'\ue0a0'         # 
+  }
+  local ref dirty mode repo_path
+  repo_path=$(git rev-parse --git-dir 2>/dev/null)
+
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    ZSH_THEME_GIT_PROMPT_DIRTY='±'
     dirty=$(parse_git_dirty)
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
       prompt_segment yellow black
     else
       prompt_segment green black
     fi
-    echo -n "${ref/refs\/heads\//⭠ }$dirty"
+
+    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+      mode=" <B>"
+    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+      mode=" >M<"
+    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+      mode=" >R>"
+    fi
+
+    setopt promptsubst
+    autoload -Uz vcs_info
+
+    zstyle ':vcs_info:*' enable git
+    zstyle ':vcs_info:*' get-revision true
+    zstyle ':vcs_info:*' check-for-changes true
+    zstyle ':vcs_info:*' stagedstr '✚'
+    zstyle ':vcs_info:git:*' unstagedstr '●'
+    zstyle ':vcs_info:*' formats ' %u%c'
+    zstyle ':vcs_info:*' actionformats ' %u%c'
+    vcs_info
+    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
   fi
 }
 
